@@ -1,9 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './header'
+import Job from './job/pages/job'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App/>
-  </StrictMode>,
+    <Job idOffre={1}/>
+  </StrictMode>
 )

@@ -1,0 +1,16 @@
+.nav-link {
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #7253ce !important;
+}
+
+.reset {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.reset:hover {
+  color: #5a3fb8 !important;
+}

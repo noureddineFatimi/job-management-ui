@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+/src/home.jsx
+/src/homeAPI.jsx
+/src/job.jsx
+/src/home.css
