@@ -1,19 +1,29 @@
 import {  Select, Checkbox, InputNumber } from "antd"
 import Sider from "antd/es/layout/Sider"
-import { memo } from "react"
+import { memo, useCallback } from "react"
 
 
-const Filter = memo(function Filter({secteurs, fonctions, idSecteur, idFonction,typesOffre,onChangeMinAnnExp, minAnneeExpMin, onChangeSecteur, onChangeFontion, onChangeTypesOffre, handleResetClick}) {
+const Filter = memo(function Filter({secteurs, fonctions, idSecteur, idFonction,typesOffre, minAnneeExpMin, updatePersoHook}) {
     console.log("filter rendu")
 
     const handleOnChangeTypesOffres = (valeur) => {
       if (valeur.target.checked){
-        onChangeTypesOffre("typesOffre",[...typesOffre, valeur.target.value])
+        updatePersoHook("typesOffre",[...typesOffre, valeur.target.value])
       }
       else {
-        onChangeTypesOffre("typesOffre", typesOffre.filter(v => v !==  valeur.target.value))
+        updatePersoHook("typesOffre", typesOffre.filter(v => v !==  valeur.target.value))
       }
     }
+
+    const handleResetClick = useCallback(() => {
+        updatePersoHook("idSecteur", null)
+        updatePersoHook("idFonction", null)
+        updatePersoHook("minAnneeExpMin", null)
+        updatePersoHook('typesOffre', [])
+        }, 
+        [updatePersoHook]
+      )
+
     
     return <Sider
   style={{
@@ -75,7 +85,7 @@ const Filter = memo(function Filter({secteurs, fonctions, idSecteur, idFonction,
                 showSearch
                 optionFilterProp="label"
                 defaultValue={null}
-                onChange = {(value) => onChangeSecteur("idSecteur",value)}
+                onChange = {(value) => updatePersoHook("idSecteur",value)}
                 options={[
                   {
                     value: null,
@@ -107,7 +117,7 @@ const Filter = memo(function Filter({secteurs, fonctions, idSecteur, idFonction,
                 value={idFonction}
                 optionFilterProp="label"
                 defaultValue={null}
-                onChange={value => onChangeFontion("idFonction", value)}
+                onChange={value => updatePersoHook("idFonction", value)}
                 options={[
                   {
                     value: null,
@@ -160,7 +170,7 @@ const Filter = memo(function Filter({secteurs, fonctions, idSecteur, idFonction,
             >
               <span style={{ fontWeight: "450", fontSize: "17px" }}>Minimum d'années d'experience</span>
               <div style={{ marginLeft: "0.8rem" }}>
-                <InputNumber placeholder="Maximum: 10 ans" min = {1} max={10} style={{ width: "100%" }} onChange={value => onChangeMinAnnExp("minAnneeExpMin", value)} value={minAnneeExpMin}/>
+                <InputNumber placeholder="Maximum: 10 ans" min = {1} max={10} style={{ width: "100%" }} onChange={value => updatePersoHook("minAnneeExpMin", value)} value={minAnneeExpMin}/>
               </div>
             </div>
           </Sider>

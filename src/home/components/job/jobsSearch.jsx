@@ -1,6 +1,7 @@
 import {EnvironmentOutlined, UserOutlined, TeamOutlined, DollarOutlined} from "@ant-design/icons"
 import { Card, Tag } from "antd"
 import { memo } from "react"
+import { Link } from "react-router-dom"
 
 const JobsSearch = memo(function JobsSearch({offres, loading}) {
 
@@ -34,9 +35,9 @@ const JobsSearch = memo(function JobsSearch({offres, loading}) {
                         </span>
                         <Tag color="geekblue">{offre.nbr_candidats} candidatures</Tag>
                       </div>
-                      <p style={{ color: "#000" }}>
+                      {offre.description && <p style={{ color: "#000" }}>
                         {offre.description}
-                      </p>
+                      </p>}
                       {
                         offre.competences !== null && offre.competences !== undefined && offre.competences.length > 0 &&
                         <div style={{ display: "flex", gap: "0.2rem" }}>
@@ -52,7 +53,7 @@ const JobsSearch = memo(function JobsSearch({offres, loading}) {
                         </span>
                       </div>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                        <a href="#"> Plus d'information</a>
+                        <Link to={`/offres/${offre.id}`}> Plus d'information</Link>
                       </div>
                     </div>
                   }

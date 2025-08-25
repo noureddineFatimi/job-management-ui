@@ -2,7 +2,7 @@ import {  Select, Input, Space } from "antd"
 import {EnvironmentOutlined, SearchOutlined } from "@ant-design/icons"
 import { useState, useEffect, memo} from "react"
 
-const SearchBar = memo(function SearchBar({onChangeLoading ,villes,onChangeMotCle,onChangeVille, handleSearch, setCurrentPageToFirstPage, scroll}) {
+const SearchBar = memo(function SearchBar({onChangeLoading ,villes , updatePersoHook, handleSearch, scroll}) {
 
       const [isSearchSticky, setIsSearchSticky] = useState(false)
 
@@ -42,10 +42,10 @@ const SearchBar = memo(function SearchBar({onChangeLoading ,villes,onChangeMotCl
             <Input addonBefore={<SearchOutlined />} placeholder="Mots clés (ex. Développeur)" onChange={(value) => {{
         const motsClesTraite = value.target.value.trim()
         if (motsClesTraite.length === 0){
-          onChangeMotCle("motsCles",null)
+          updatePersoHook("motsCles",null)
         }
         else{
-          onChangeMotCle("motsCles", motsClesTraite)
+          updatePersoHook("motsCles", motsClesTraite)
         }
       } } }/>
           </Space.Compact>
@@ -56,7 +56,7 @@ const SearchBar = memo(function SearchBar({onChangeLoading ,villes,onChangeMotCl
             suffixIcon={<EnvironmentOutlined/>}
             defaultValue= {null}
             style={{ width: "20%" }}
-            onChange={value => onChangeVille("idVilleSelectionne",value)}
+            onChange={value => updatePersoHook("idVilleSelectionne",value)}
             options={[
               { 
               value: null, 
@@ -72,7 +72,6 @@ const SearchBar = memo(function SearchBar({onChangeLoading ,villes,onChangeMotCl
           />
           <button
             onClick={() => {
-              setCurrentPageToFirstPage(1)
               handleSearch(1)
               onChangeLoading(true)
               scroll()

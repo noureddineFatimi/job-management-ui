@@ -62,8 +62,9 @@ const JobOffre = ({data, loading }) => {
   }
 
 
-
     const offre = data.data
+    console.log(offre)
+
     const logo = data.logo
     return  <Card loading={loading} style={{ minWidth: 300, marginBottom: "1.5rem" }}>
         {!loading && offre && <Flex gap="2rem" align="start">
@@ -76,7 +77,7 @@ const JobOffre = ({data, loading }) => {
                       <div>
                         {checkAnneeExperience(offre.annees_experience_min, offre.annees_experience_max)} 
                         <Tag color="default"> {offre.nbr_employes_demande} poste(s) sur {offre.ville.nom_ville}</Tag>
-                        <Tag color="default"> {offre.niveau_etude_requis} - {offre.diplome_requis} </Tag>
+                        <Tag color="default"> {offre.niveau_etude_requis} - {offre.diplome_requis ? offre.diplome_requis : "Aucun diplôme / Niveau scolaire" } </Tag>
                       </div>
                       <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
                         

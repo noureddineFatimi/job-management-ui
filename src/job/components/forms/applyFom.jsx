@@ -1,5 +1,5 @@
 import { message} from 'antd';
-import {  useState } from "react";
+import {  useState, useEffect } from "react";
 import {InboxOutlined} from "@ant-design/icons"
 import instance from "../../api/api"
 import { Button, Form, Input, Upload} from 'antd';
@@ -7,6 +7,23 @@ import { Button, Form, Input, Upload} from 'antd';
 const ApplyForm =  ({loading, deadline_postulation, idOffre}) => {
 
     const [messageApi, contextHolder] = message.useMessage();
+    const [loadingMessage, loadingContextHolder] = message.useMessage()
+      const [loadingMessageState, setLoadingMessageState] = useState(false)
+
+      useEffect(() => {
+              if (loadingMessageState === true) {
+                loadingMessage.open({
+                  key:"loading",
+                type: 'loading',
+                content: 'Postulation en cours..',
+                duration: 0
+                });
+              }
+              else {
+                loadingMessage.destroy()
+              }
+            }, [loadingMessageState])
+        
 
 const error = (content) => {
 
@@ -60,9 +77,9 @@ const error = (content) => {
   try {
     const response = await instance.post("candidats/cv", formData)
     return response.data.id_fichier
-  } catch (error) {
+  } catch (err) {
     error("Nous rencontrez des problèmes, veuillez ressayer plus tard !")
-    console.error(error)
+    console.error(err)
     return false
   }
   }
@@ -79,6 +96,7 @@ const validateMessages = {
 };
 
 const onFinish = async (values) => {
+  setLoadingMessageState(true)
   const id_fichier = await ajouterCV()
   if (!id_fichier) {
       console.error("Erreur : CV non uploadé !");
@@ -98,6 +116,7 @@ const onFinish = async (values) => {
     }
     console.error(err)
   }
+  setLoadingMessageState(false)
 }
 
       const deadline = (deadline_postulation) => {
@@ -110,7 +129,7 @@ const onFinish = async (values) => {
     return false
   }
 
-    return <> {contextHolder}{!loading && <div  style={{display:"flex", flexDirection: "column", }}>
+    return <> {contextHolder}{loadingContextHolder}{!loading && <div  style={{display:"flex", flexDirection: "column", }}>
         <h3 style={{ marginLeft:"auto", marginRight: "auto", fontSize: "30px", color: "#7253ce "}}>Postulez maintenant!</h3>
 <div style={{display:"flex", justifyContent: "center"}}>
 
@@ -121,16 +140,16 @@ const onFinish = async (values) => {
     style={{ width: "50%" }}
     validateMessages={validateMessages}
   >
-    <Form.Item name='nom' label="Nom" validateDebounce={1000} hasFeedback rules={[{ required: true , pattern:/^[a-zA-Z\-\s]{3,10}$/}]}>
+    <Form.Item name='nom' label="Nom" validateDebounce={1000} hasFeedback rules={[{ required: true} , {pattern:/^[a-zA-Z\-\s]{3,10}$/, message: "Nom inconvable"}]}>
       <Input />
     </Form.Item>
-    <Form.Item name='prenom' label="Prénom"  hasFeedback validateDebounce={1000}  rules={[{ required: true , pattern:/^[a-zA-Z\-\s]{3,10}$/}]}>
+    <Form.Item name='prenom' label="Prénom"  hasFeedback validateDebounce={1000}  rules={[{ required: true} , {pattern:/^[a-zA-Z\-\s]{3,10}$/, message: "Prénom incovenable"}]}>
       <Input />
     </Form.Item>
     <Form.Item name='email' label="Email" hasFeedback validateDebounce={1000}  rules={[{ type: 'email', required:true }]}>
       <Input />
     </Form.Item>
-    <Form.Item name="numero_tel" label="Numero de télephone" validateDebounce={1000}  hasFeedback rules={[{ required: true, pattern:/^(05|06|07)\d{8}$/ }]}>
+    <Form.Item name="numero_tel" label="Numero de télephone" validateDebounce={1000}  hasFeedback rules={[{ required: true}, {pattern:/^(05|06|07)\d{8}$/ , message:"Numero de télephone incovenable"}]}>
         <Input addonBefore="+212" />
     </Form.Item>
    <Form.Item label="CV" required = "true">

@@ -1,8 +1,11 @@
 import websitelogo from "../../../assets/images/websitelogo.png"
 import { memo } from "react"
 import "../../assets/home.css"
+import { useNavigate } from "react-router-dom"
 
 const Header = memo(function Header() {
+
+
     console.log("header rendu")
     return <div
         style={{
@@ -36,7 +39,7 @@ const Header = memo(function Header() {
               </a>
             </span>
             <span style={{ fontSize: "18px", fontWeight: "500" }}>
-              <a href="/" style={{ color: "#1f1f1f" }} className="nav-link">
+              <a href="/register" style={{ color: "#1f1f1f" }} className="nav-link">
                 <span className="nav-link">Poster un offre d'emploi</span>
               </a>
             </span>

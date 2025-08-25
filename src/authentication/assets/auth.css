@@ -1,0 +1,8 @@
+.sign-up-link {
+    color: blue;
+  transition: color 0.3s ease;
+}
+
+.sign-up-link:hover {
+  color: #7253ce !important;
+}

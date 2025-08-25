@@ -62,33 +62,19 @@ const Home = () => {
     useEffect(() => {
       handleRechercher(currentPage)
     }, [currentPage])
-    
-  const handleResetClick = useCallback(() => {
-    updateFilters("idSecteur", null)
-    updateFilters("idFonction", null)
-    updateFilters("minAnneeExpMin", null)
-    updateFilters('typesOffre', [])
-    }, 
-    [updateFilters]
-  )
 
   const scroll = useCallback(
     () => {
       offresRef.current.scrollIntoView({ behavior: "smooth" })
-    },
-    [],
-  )
+    },[])
   
-
   return (
     <Layout style={{ background: "#fff" }}>
       <Header/>
       <div ref={offresRef}>
      <Hero/>
-      <SearchBar onChangeLoading ={setLoading} villes={resources.villes} onChangeMotCle={updateFilters} onChangeVille={updateFilters} handleSearch={handleRechercher} setCurrentPageToFirstPage={setCurrentPage} scroll= {scroll}/>
-      
+      <SearchBar onChangeLoading ={setLoading} villes={resources.villes} updatePersoHook={updateFilters} handleSearch={handleRechercher} scroll= {scroll}/>
       <div style={{ padding: "0 48px" }}>
-        
         <Layout style={{ padding: "24px 0", background: "#fff", gap: "2rem" }}>
           <Content style={{ padding: "0 24px", minHeight: 280, background: "#fff" }}>
             <div style={{ marginBottom: "1rem" }}>Résultats ({total})</div>
@@ -96,9 +82,8 @@ const Home = () => {
                 {loading ? Array.from({ length: 10 }).map((_, index) => (<Card key={`skeleton-${index}`} loading={true} style={{ minWidth: 300, width: "100%" }} />)) : <JobsSearch offres={offres} loading={loading}/> }
             </Flex>
           </Content>
-          <Filter secteurs={resources.secteurs_activite} fonctions={resources.fonctions} idSecteur={filters.idSecteur} idFonction={filters.idFonction} typesOffre={filters.typesOffre} onChangeFontion={updateFilters} onChangeTypesOffre={updateFilters} onChangeMotCle={updateFilters} onChangeSecteur={updateFilters} onChangeMinAnnExp={updateFilters} minAnneeExpMin={filters.minAnneeExpMin} handleResetClick= {handleResetClick}/>
+          <Filter secteurs={resources.secteurs_activite} fonctions={resources.fonctions} idSecteur={filters.idSecteur} idFonction={filters.idFonction} typesOffre={filters.typesOffre} updatePersoHook={updateFilters} minAnneeExpMin={filters.minAnneeExpMin}/>
         </Layout>
-        
         <Pagination onChangeCurrentPage={setCurrentPage} onChangeLoading={setLoading} scroll={scroll} total={total} limit={limit} currentPage={currentPage} />
       </div>
       <Footer/>

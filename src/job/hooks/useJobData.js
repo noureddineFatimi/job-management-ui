@@ -5,13 +5,16 @@ import { useEffect } from "react"
 export const useJobData = (idOffre, onChangeLoading) => {
 
     const [data, setData] = useState({data: {}, logo: null})
-
+  const [error, setError] = useState(null)
     const getOffre = async (idOffre) => {
     try {
       const data = (await instance.get(`offres/${idOffre}`)).data
       return data
     } catch (error) {
-      console.error(error)
+      if (error.response && error.response.status === 404) {
+      throw new Error("not_found") 
+    }
+    throw error
     }
     }
 
@@ -32,13 +35,17 @@ export const useJobData = (idOffre, onChangeLoading) => {
         const logo = await getLogo(offre.entreprise.logo.id)
         setData(prev => ({...prev, logo: logo}))
         onChangeLoading(false)
-        } catch (error) {
-          console.error(error)
+        } catch (err) {
+           if (err.message === "not_found") {
+          setError("not_found")
+        } else {
+          setError("Une erreur est survenue")
+        }
         }
         }
         fetchData()
     }, [])
 
-    return {data}
+    return {data,error}
 
 }
