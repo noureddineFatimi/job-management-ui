@@ -249,6 +249,5 @@ Les contributions sont les bienvenues ! Voici comment procéder :
 - [ ] Analytics avancés
 - [ ] Mode sombre
 - [ ] Internationalisation (i18n)
-**Développé avec ❤️ par [Votre Nom]**
 
 ⭐ N'oubliez pas de donner une étoile au projet si vous le trouvez utile !
