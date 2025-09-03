@@ -3,25 +3,49 @@ import Sider from "antd/es/layout/Sider"
 import { memo, useCallback } from "react"
 
 
-const Filter = memo(function Filter({secteurs, fonctions, idSecteur, idFonction,typesOffre, minAnneeExpMin, updatePersoHook}) {
+const Filter = memo(function Filter({secteurs, fonctions, setSearchQueryParams, searchQueryParams}) {
     console.log("filter rendu")
 
-    const handleOnChangeTypesOffres = (valeur) => {
+   /*  const handleOnChangeTypesOffres = (valeur) => {
       if (valeur.target.checked){
         updatePersoHook("typesOffre",[...typesOffre, valeur.target.value])
       }
       else {
         updatePersoHook("typesOffre", typesOffre.filter(v => v !==  valeur.target.value))
       }
-    }
+    } */
 
+       const handleOnChangeTypesOffres = (valeur) => {
+        const params = new URLSearchParams(searchQueryParams)
+        if (valeur.target.checked){
+          params.append("typesOffre", valeur.target.value)
+        }
+        else {
+          const oldTypesOffre = params.getAll("typesOffre")
+          params.delete("typesOffre")
+          oldTypesOffre.forEach(oldTypeOffre => {
+            if (oldTypeOffre !== valeur.target.value) {
+              params.append("typesOffre", oldTypeOffre)
+            }
+          });
+        }
+        params.set("page", 1)
+        setSearchQueryParams(params)
+      } 
+      
     const handleResetClick = useCallback(() => {
-        updatePersoHook("idSecteur", null)
-        updatePersoHook("idFonction", null)
-        updatePersoHook("minAnneeExpMin", null)
-        updatePersoHook('typesOffre', [])
+        const params = new URLSearchParams(searchQueryParams)
+        params.delete("idSecteur")
+        params.delete("idFonction")
+        params.delete("minAnneeExpMin")
+        params.delete("typesOffre")
+        setSearchQueryParams(params)
+        /* setSearchQueryParams({...searchQueryParams,idSecteur:""})
+        setSearchQueryParams({...searchQueryParams,idFonction:""})
+        setSearchQueryParams({...searchQueryParams,minAnneeExpMin:""}) */
+        //updatePersoHook('typesOffre', [])
         }, 
-        [updatePersoHook]
+        [setSearchQueryParams]
       )
 
     
@@ -81,14 +105,23 @@ const Filter = memo(function Filter({secteurs, fonctions, idSecteur, idFonction,
               <Select
                 id="secteurActiviteField"
                 style={{ marginLeft: "0.8rem" }}
-                value={idSecteur}
+                value={searchQueryParams.get("idSecteur") ? parseInt(searchQueryParams.get("idSecteur")) : ""}
                 showSearch
                 optionFilterProp="label"
-                defaultValue={null}
-                onChange = {(value) => updatePersoHook("idSecteur",value)}
+                defaultValue=""
+                onChange = {(value) => {
+                  const params = new URLSearchParams(searchQueryParams)
+                    if (value) {
+                      params.set("idSecteur", value); 
+                    } else {
+                      params.delete("idSecteur");    
+                    }
+                    params.set("page", 1)
+                    setSearchQueryParams(params);
+              }}
                 options={[
                   {
-                    value: null,
+                    value: "",
                     label: "Tous les secteurs",
                   },
                   ...secteurs.map(secteur =>(
@@ -114,13 +147,22 @@ const Filter = memo(function Filter({secteurs, fonctions, idSecteur, idFonction,
               <Select
                 style={{ marginLeft: "0.8rem" }}
                 showSearch
-                value={idFonction}
+                value={searchQueryParams.get("idFonction") ? parseInt(searchQueryParams.get("idFonction")) : ""}
                 optionFilterProp="label"
-                defaultValue={null}
-                onChange={value => updatePersoHook("idFonction", value)}
+                defaultValue=""
+                onChange = {(value) => {
+                  const params = new URLSearchParams(searchQueryParams)
+                    if (value) {
+                      params.set("idFonction", value); 
+                    } else {
+                      params.delete("idFonction");    
+                    }
+                    params.set("page", 1)
+                    setSearchQueryParams(params);
+              }}
                 options={[
                   {
-                    value: null,
+                    value: "",
                     label: "Tous les fonctions",
                   },
                   ...fonctions.map(fonction =>(
@@ -143,22 +185,22 @@ const Filter = memo(function Filter({secteurs, fonctions, idSecteur, idFonction,
               }}
             >
               <span style={{ fontWeight: "450", fontSize: "17px" }}>Type d'offre</span>
-              <Checkbox style={{ marginLeft: "0.8rem" }} value="CDD" checked ={typesOffre.includes("CDD")} onChange={handleOnChangeTypesOffres}>
+              <Checkbox style={{ marginLeft: "0.8rem" }} value="CDD" checked ={searchQueryParams.getAll("typesOffre").includes("CDD") }  onChange={handleOnChangeTypesOffres} >
                 CDD
               </Checkbox>
-              <Checkbox style={{ marginLeft: "0.8rem" }} value="CDI" checked ={typesOffre.includes("CDI")}  onChange={handleOnChangeTypesOffres}>
+              <Checkbox style={{ marginLeft: "0.8rem" }} value="CDI"  checked ={searchQueryParams.getAll("typesOffre").includes("CDI")}   onChange={handleOnChangeTypesOffres} >
                 CDI
               </Checkbox>
-              <Checkbox style={{ marginLeft: "0.8rem" }} value="Stage" checked ={typesOffre.includes("Stage")} onChange={handleOnChangeTypesOffres} >
+              <Checkbox style={{ marginLeft: "0.8rem" }} value="Stage" checked ={searchQueryParams.getAll("typesOffre").includes("Stage")} onChange={handleOnChangeTypesOffres}  >
                 Stage
               </Checkbox>
-              <Checkbox style={{ marginLeft: "0.8rem" }} value="Intérim" checked ={typesOffre.includes("Intérim")}  onChange={handleOnChangeTypesOffres}>
+              <Checkbox style={{ marginLeft: "0.8rem" }} value="Intérim"  checked ={searchQueryParams.getAll("typesOffre").includes("Intérim")} onChange={handleOnChangeTypesOffres} >
                 Intérim
               </Checkbox>
-              <Checkbox style={{ marginLeft: "0.8rem" }} value="Freelance" checked ={typesOffre.includes("Freelance")}  onChange={handleOnChangeTypesOffres}>
+              <Checkbox style={{ marginLeft: "0.8rem" }} value="Freelance"  checked ={searchQueryParams.getAll("typesOffre").includes("Freelance")} onChange={handleOnChangeTypesOffres} >
                 Freelance
               </Checkbox>
-              <Checkbox style={{ marginLeft: "0.8rem" }} value="Autre contrat" checked ={typesOffre.includes("Autre contrat")}  onChange={handleOnChangeTypesOffres}>
+              <Checkbox style={{ marginLeft: "0.8rem" }} value="Autre contrat" checked ={searchQueryParams.getAll("typesOffre").includes("Autre contrat")}   onChange={handleOnChangeTypesOffres} >
                 Autre
               </Checkbox>
             </div>
@@ -173,7 +215,16 @@ const Filter = memo(function Filter({secteurs, fonctions, idSecteur, idFonction,
             >
               <span style={{ fontWeight: "450", fontSize: "17px" }}>Minimum d'années d'experience</span>
               <div style={{ marginLeft: "0.8rem" }}>
-                <InputNumber placeholder="Maximum: 10 ans" min = {1} max={10} style={{ width: "100%" }} onChange={value => updatePersoHook("minAnneeExpMin", value)} value={minAnneeExpMin}/>
+                <InputNumber placeholder="Maximum: 10 ans" min = {1} max={10} style={{ width: "100%" }} onChange = {(value) => {
+                  const params = new URLSearchParams(searchQueryParams)
+                    if (value) {
+                      params.set("minAnneeExpMin", value); 
+                    } else {
+                      params.delete("minAnneeExpMin");    
+                    }
+                    params.set("page", 1)
+                    setSearchQueryParams(params);
+              }} value={searchQueryParams.get("minAnneeExpMin")}/>
               </div>
             </div>
           </Sider>

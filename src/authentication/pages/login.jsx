@@ -47,13 +47,15 @@ const Login = () => {
   return <div style={{
     fontFamily: "'Inter', 'Segoe UI', sans-serif",
   display: "flex", 
-  height: "100vh",
+  minHeight: "100vh",
   alignItems: "center", 
   justifyContent: "center", 
   flexDirection:" column",
   padding: "0 5px",
   gap:"2rem",
-  background: "linear-gradient(90deg, #e6ecfa 0%, #f4f1fd 100%)"
+  background: "linear-gradient(90deg, #e6ecfa 0%, #f4f1fd 100%)",
+          backgroundAttachment: "fixed"
+
 }}> {contextHolder}
 
 <WelcomeLogin/>
@@ -61,6 +63,7 @@ const Login = () => {
     backgroundColor: "white",
     paddingTop:"40px",
     padding: "40px",
+    paddingBottom:20,
     borderRadius: "12px",
     boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
     width: "100%",
@@ -76,10 +79,49 @@ const Login = () => {
           marginBottom: "20px"
         }}
       />
+       <p style={{
+            margin: "8px 0 0",
+            color: "#666",
+            fontSize: "14px"
+          }}>
+            Connectez-vous à votre compte
+          </p>
     </div>    
     {errorMessage && <Alert message={errorMessage} style={{marginBottom:"1rem"}} type="error" showIcon closable/>}
     <FormToLogin onFinish={onFinish}/>
-    <div style={{textAlign:"center", width:"100%"}}>Pas encore de compte ? <Link to='/register' className="sign-up-link" style={{textDecoration:"none"}}>Creer un Compte</Link></div>
+
+           <div style={{
+                    textAlign: "center", 
+                    width: "100%",
+                    marginTop: "30px",
+                    padding: "20px 0",
+                    borderTop: "1px solid #f0f0f0",
+                    fontSize: "14px",
+                    color: "#666"
+                  }}>
+                    Pas encore de compte ?{' '}
+                    <Link 
+                      to='/register' 
+                      style={{
+                        color: "#667eea",
+                        textDecoration: "none",
+                        fontWeight: "600",
+                        transition: "all 0.3s ease"
+                      }}
+                      className='sign-up-link'
+                      onMouseEnter={(e) => {
+                        e.target.style.color = "#764ba2";
+                        e.target.style.textDecoration = "underline";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.color = "#667eea";
+                        e.target.style.textDecoration = "none";
+                      }}
+                    >
+                      Creer un Compte
+                    </Link>
+                  </div>
+
   </div>
 </div>
 };

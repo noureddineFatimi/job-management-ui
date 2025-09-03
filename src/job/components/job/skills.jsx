@@ -3,22 +3,21 @@ import { Flex, Progress} from 'antd';
 const Skills = ({loading, competences}) => { 
   console.log(competences)
     return <>{!loading && competences !== null && competences !== undefined && competences.length > 0 && 
-<div><div style={{fontWeight:"500", fontSize: "15px", marginBottom:"10px"}}>Competences: </div>
-<Flex 
-  gap="small" 
+<div style={{borderRadius: "15px", marginBottom: "1.5rem",
+    border: "1px solid #d9d9d9",background:"#fff",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.1)", padding:"1.2rem", width:"100%"}} ><div style={{fontWeight:"500", fontSize: "1.2rem", marginBottom:"1.2rem"}}>Competences </div>
+<div 
+  
   style={{
+    display:"flex",
+    flexDirection:"column",
+    gap:"8px" ,
     marginBottom: "1.5rem", 
     width: "100%", 
-    maxWidth: "500px",
     marginLeft: "0.6rem",
-    padding: "1.5rem",
-    backgroundColor: "#fafafa",
-    borderRadius: "12px",
-    border: "1px solid #e8e8e8",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)"
+    alignItems:"center"
   }} 
-  vertical
->
+  >
 
   {competences.map((competence, index) => {
     const getCompetenceConfig = (niveau) => {
@@ -71,7 +70,7 @@ const Skills = ({loading, competences}) => {
           padding: "1rem",
           backgroundColor: "white",
           borderRadius: "8px",
-          border: "1px solid #f0f0f0",
+          width:"98%",
           transition: "all 0.2s ease",
           cursor: "default"
         }}
@@ -84,12 +83,12 @@ const Skills = ({loading, competences}) => {
           e.currentTarget.style.boxShadow = "none";
         }}
       >
-        {/* En-tête avec nom de compétence et badge niveau */}
         <div style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "0.5rem"
+          marginBottom: "0.5rem",
+          width:"100%"
         }}>
           <span style={{
             fontSize: "0.95rem",
@@ -112,7 +111,6 @@ const Skills = ({loading, competences}) => {
           </span>
         </div>
 
-        {/* Barre de progression stylisée */}
         <div style={{ width: "100%" }}>
           <Progress 
             percent={config.percent}
@@ -131,7 +129,6 @@ const Skills = ({loading, competences}) => {
           />
         </div>
 
-        {/* Indicateur de pourcentage */}
         <div style={{
           display: "flex",
           justifyContent: "space-between",
@@ -151,7 +148,7 @@ const Skills = ({loading, competences}) => {
     );
   })}
 
-</Flex>
+</div>
     </div>
 }</>
 

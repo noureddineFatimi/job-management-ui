@@ -19,9 +19,7 @@ instance.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("token");
       setTimeout(() => {
-        console.log("redirection ....")
-                window.location.href = "/login";
-
+        window.location.href = "/login";
       }, 1500);
     }
     return Promise.reject(error);
@@ -153,4 +151,35 @@ export const deconnexion = async () => {
     } catch (error) {
         return {result: false, status: error.response ? error.response.status : null}
     }
+}
+
+export const getCandidatures = async(id_offre) => {
+  try {
+    const response = await instance.get(`offres/${id_offre}/applications`)
+    return {result: true, status : response.status, applicationsList : response.data}
+  } catch (error) {
+    return {result: false, status: error.response ? error.response.status : null, applicationsList: null}
+  }
+}
+
+export const cvCandidat = async (cv_id) => {
+  try {
+    const response = await instance.get(`fichiers/${cv_id}`, { responseType: 'blob' })
+    console.log(response)
+    return {result: true, status: response.status, cv: response.data}
+  } catch (error) {
+    console.log(error)
+    return {result: false, status: error.response ? error.response.status : null, logo:null}
+  }
+}
+
+export const deleteCompte = async () => {
+  try {
+    const response = await instance.delete("users")
+    console.log(response)
+    return {result: true, status: response.status, cv: response.data}
+  } catch (error) {
+    console.log(error)
+    return {result: false, status: error.response ? error.response.status : null, logo:null}
+  }
 }

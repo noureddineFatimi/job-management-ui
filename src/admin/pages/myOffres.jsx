@@ -1,9 +1,11 @@
-import { ArrowPathIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { Tag, Typography, Space, Popconfirm, Table, Button, Drawer,message, Spin } from "antd";
-import { useEffect, useState } from "react";
+import { ArrowPathIcon, EyeIcon,TrashIcon } from "@heroicons/react/24/outline";
+import { Tag, Typography, Space,Input, Popconfirm, Table, Button, Drawer,message, Spin, Empty } from "antd";
+import { useEffect, useState, useRef } from "react";
 import {DollarOutlined} from "@ant-design/icons"
 import { logoEntreprise, myOffres, deleteOffre } from "../api/api";
 import { useNavigate } from "react-router-dom";
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from '@ant-design/icons';
 
 const MyOffres = () => {
 
@@ -24,54 +26,7 @@ const MyOffres = () => {
     }
 }
 
-const columns = [
-  {
-    title: 'id',
-    dataIndex: 'id',
-    key: 'id',
-    render: id => <a onClick={() => onClick(id)}>{id}</a>
-  },
-  {
-    title: 'Titre',
-    dataIndex: 'titre',
-    key: 'titre',
-    render: titre => <span style={{fontWeight:"500"}}>{titre}</span>
-  },
-  {
-    title: 'Ville',
-    dataIndex: ["ville", "nom_ville"],
-    key: 'ville',
-  },
-  {
-    title: 'Type de contrat',
-    dataIndex: 'type_offre',
-    key: 'type_offre',
-    render: type_offre => tagging_type_offre(type_offre)
-  },
-  {
-    title: 'Date limite de Postulation',
-    dataIndex: 'deadline_postulation',
-    key: 'deadline_postulation',
-    render: deadline_postulation => <span>{new Date(deadline_postulation).toLocaleDateString()}</span>
-  },
-  {
-    title: 'Actions',
-    key: 'actions',
-    render: (_, record) => (
-        <Space>
-          <Button type="link" onClick={()=>onClickUpdate(record.id)} icon={<ArrowPathIcon style={{width:"16px"}}/>}>Modifier</Button>
-          <Popconfirm
-            title="Êtes-vous sûr de vouloir supprimer cette offre ?"
-            okText="Oui"
-            cancelText="Non"
-            onConfirm={()=>onClickDelete(record.id)}
-          >
-            <Button danger type="link" icon={<TrashIcon style={{width:"16px"}}/>}>Supprimer</Button>
-          </Popconfirm>
-        </Space>
-      ),
-  },
-];
+
 const salaire = (salaire_min, salaire_max) => {
     if (salaire_max !== null || salaire_min !== null) {
       if (salaire_max !== null && salaire_min !== null) {
@@ -170,7 +125,7 @@ const salaire = (salaire_min, salaire_max) => {
       if(result && result.status === 401 ) {
         error("Votre session a expiré. Veuillez vous reconnecter..");
       }else {
-        error("Nous rencontrez des problèmes, veuillez ressayer plus tard !")
+        error("Nous rencontrons des problèmes, veuillez ressayer plus tard !")
       }
     }
     } catch (e) {
@@ -207,7 +162,7 @@ const salaire = (salaire_min, salaire_max) => {
       if(logoresult && logoresult.status === 401 ) {
         error("Votre session a expiré. Veuillez vous reconnecter..");
       }else {
-        error("Nous rencontrez des problèmes, veuillez ressayer plus tard !")
+        error("Nous rencontrons des problèmes, veuillez ressayer plus tard !")
       }
     }
     } catch (e) {
@@ -234,7 +189,7 @@ const salaire = (salaire_min, salaire_max) => {
       if(deleteResult && deleteResult.status === 401 ) {
         error("Votre session a expiré. Veuillez vous reconnecter..");
       }else {
-        error("Nous rencontrez des problèmes, veuillez ressayer plus tard !")
+        error("Nous rencontrons des problèmes, veuillez ressayer plus tard !")
       }
     }
     } catch (e) {
@@ -243,14 +198,190 @@ const salaire = (salaire_min, salaire_max) => {
       setLoadingState(false)
     }
   }
-  
+
+   const [searchText, setSearchText] = useState('')
+    const [searchedColumn, setSearchedColumn] = useState('');
+     const searchInput = useRef(null);
+
+      const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = clearFilters => {
+    clearFilters();
+    setSearchText('');
+  };
+
+   const getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div style={{ padding: 8 }} onKeyDown={e => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Recherche sur ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Chercher
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Réinitialiser
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({ closeDropdown: false });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filtrer
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            Fermer
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    filterDropdownProps: {
+      onOpenChange(open) {
+        if (open) {
+          setTimeout(() => searchInput.current?.select(), 100);
+        }
+      },
+    },
+    render: text =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  const columns = [
+  {
+    title: 'id',
+    dataIndex: 'id',
+    key: 'id',
+    render: id => <a onClick={() => onClick(id)}>{id}</a>
+  },
+  {
+    title: 'Titre',
+    dataIndex: 'titre',
+    key: 'titre',
+    render: titre => <span style={{fontWeight:"500"}}>{titre}</span>,
+    ...getColumnSearchProps('titre')
+  },
+  {
+    title: 'Ville',
+    dataIndex: ["ville", "nom_ville"],
+    key: 'ville'
+  },
+  {
+    title: 'Type de contrat',
+    dataIndex: 'type_offre',
+    key: 'type_offre',
+    
+    width:200,
+    
+    render: type_offre => tagging_type_offre(type_offre),
+    filters: [
+      {
+        text: 'CDD',
+        value: 'CDD',
+      },
+      {
+        text: 'CDI',
+        value: 'CDI',
+
+      },
+      {
+        text: 'Stage',
+        value: 'Stage',
+        
+      },
+      {
+        text: 'Intérim',
+        value: 'Intérim',
+        
+      },
+      {
+        text: 'Freelance',
+        value: 'Freelance',
+        
+      },
+      {
+        text: 'Autre',
+        value: 'Autre contrat',
+        
+      }
+    ],
+    onFilter: (value, record) => record.type_offre.indexOf(value) === 0,
+  },
+  {
+    title: 'Date limite de Postulation',
+    dataIndex: 'deadline_postulation',
+    key: 'deadline_postulation',
+    render: deadline_postulation => <span>{new Date(deadline_postulation).toLocaleDateString()}</span>,
+    width: 200
+  },
+  {
+    title: 'Actions',
+    key: 'actions',
+    render: (_, record) => (
+        <Space>
+          <Button type="link" onClick={()=>onClickUpdate(record.id)} icon={<ArrowPathIcon style={{width:"16px"}}/>}>Modifier</Button>
+          <Popconfirm
+            title="Êtes-vous sûr de vouloir supprimer cet offre ?"
+            okText="Oui"
+            cancelText="Non"
+            onConfirm={()=>onClickDelete(record.id)}
+          >
+            <Button danger type="link" icon={<TrashIcon style={{width:"16px"}}/>}>Supprimer</Button>
+          </Popconfirm>
+          <Button color="cyan" variant="link" onClick={()=> navigate(`${record.id}/applications`)} icon={<EyeIcon style={{width:"16px"}}/>}>Voir candidatures</Button>
+        </Space>
+      ),
+  },
+];
+
     return  <div style={{padding:"1rem"}}> {contextHolder} {loadingContextHolder}
         <Typography><h1 style={{fontWeight:"bold", fontSize:"30px"}}>Mes Offres d'Emploi</h1>
         <p style={{color:"gray",marginBottom:"3rem"}}>Gérez toutes vos offres publiées</p> </Typography>
-        
 
          {loading ? <div style={{width:"100%",display
-          :"flex", height:"50vh",alignItems:"center" ,  justifyContent:"center" }}> <Spin size="large" /></div> : <Table columns={columns} dataSource={offres}/>}
+          :"flex", height:"50vh",alignItems:"center" ,  justifyContent:"center" }}> <Spin size="large" /></div> : <Table columns={columns} dataSource={offres} scroll={{x: "auto", y: 8 * 55}} locale={{
+    emptyText: <Empty description="Pas encore d'offres publiées" />
+  }}/>}
     
 <Drawer
   placement="right"
@@ -277,7 +408,8 @@ const salaire = (salaire_min, salaire_max) => {
       fontWeight: 'bold',
       margin: '0 0 8px 0', color:"black"}}>{showedOffre && showedOffre.entreprise && showedOffre.entreprise.nom_entreprise}</span>
         <span  style={{ opacity: 0.9,
-      fontSize: '14px', color:"black"}}>{showedOffre && showedOffre.entreprise && showedOffre.entreprise.adresse}</span>
+      fontSize: '14px', color:"black"}}>{showedOffre && showedOffre.entreprise && showedOffre.entreprise.adresse ? showedOffre.entreprise.adresse : <span style={{color: "#666",
+            fontSize: "14px"}}>Adresse non disponible</span>}</span>
     </div>
       </div>
   <div style={{fontSize: '32px',
@@ -285,9 +417,6 @@ const salaire = (salaire_min, salaire_max) => {
 <div style={{ display: 'flex',
       gap: '8px',
       flexWrap: "wrap"}}>
-    
-
-
 
     <Tag color="red" >{showedOffre.type_offre}</Tag>
     <Tag color="cyan" >Téleravail: {showedOffre.teletravail}</Tag>
@@ -386,7 +515,7 @@ const salaire = (salaire_min, salaire_max) => {
 <span style={{ fontWeight: 'bold',
       marginBottom: '4px',
       display: 'block'}}> Diplome requis</span>
- <div > {showedOffre.diplome_requis}</div>
+ <div > {showedOffre.diplome_requis ? showedOffre.diplome_requis : "Aucun diplôme / Niveau scolaire"}</div>
     </div>
      
     <div style={{      marginBottom: '12px'
@@ -427,7 +556,8 @@ const salaire = (salaire_min, salaire_max) => {
       display: 'flex',
       alignItems: 'center',
       gap: '8px'}}>Description</div>
-      <p style={{ lineHeight: '1.6', color: '#333' }}>{showedOffre.description}</p>
+      <p style={{ lineHeight: '1.6', color: '#333' }}>{showedOffre.description ? showedOffre.description : <span style={{color: "#666",
+            fontSize: "14px"}}>Description non disponible</span>}</p>
 </div>
 
 <div style={{backgroundColor: 'white',
@@ -443,7 +573,7 @@ const salaire = (salaire_min, salaire_max) => {
       alignItems: 'center',
       gap: '8px'}}>Compétences requises</div>
 
- { showedOffre && showedOffre.competences &&showedOffre.competences.map((competence, index) => (
+ { showedOffre && showedOffre.competences && showedOffre.competences.length > 0 ? showedOffre.competences.map((competence, index) => (
                 <span 
                   key={index}
                   style={{
@@ -458,9 +588,10 @@ const salaire = (salaire_min, salaire_max) => {
                     background:"#fa8c16"
                   }}
                 >
-                  {competence.nom_competence} - {competence.niveau}
+                  {competence.nom_competence} - {competence.niveau ? competence.niveau  : "Niveau non requis"}
                 </span>
-              ))}
+              )) : <span style={{color: "#666",
+            fontSize: "14px"}}>Compétences non définis</span>}
 
  
       </div>

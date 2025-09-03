@@ -39,7 +39,7 @@ const Header = memo(function Header() {
               </a>
             </span>
             <span style={{ fontSize: "18px", fontWeight: "500" }}>
-              <a href="/register" style={{ color: "#1f1f1f" }} className="nav-link">
+              <a href="/register" style={{ color: "#1f1f1f" }} className="nav-link" target="_blank">
                 <span className="nav-link">Poster un offre d'emploi</span>
               </a>
             </span>

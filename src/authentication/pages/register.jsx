@@ -28,6 +28,8 @@ const Register = () => {
       <div style={{
         backgroundColor: "white",
         padding: "40px",
+            paddingBottom:20,
+
         borderRadius: "20px",
         boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
         width: "100%",
@@ -62,6 +64,7 @@ const Register = () => {
         <FormToRegister/>
         
         <div style={{
+          paddingTop:"20px",
           textAlign: "center", 
           width: "100%",
           marginTop: "30px",

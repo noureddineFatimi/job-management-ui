@@ -5,14 +5,15 @@ import "../assets/home.css"
 import instance from "../api/api"
 import JobsSearch from "../components/job/jobsSearch"
 import { useResources } from "../hook/useResources"
-import { useFilters } from "../hook/useFilters"
+//import { useFilters } from "../hook/useFilters copy"
 import Footer from "../components/layout/footer"
 import Header from "../components/layout/header"
 import Hero from '../components/layout/hero'
-import SearchBar from "../components/search/searchBar"
-import Filter from "../components/search/filter"
-import Pagination from "../components/job/pagination"
+import SearchBar from "../components/search/searchBar copy"
+import Filter from "../components/search/filter copy"
+import Pagination from "../components/job/pagination copy"
 import websitelogo from "../../assets/images/websitelogo.png"
+import { useSearchParams } from "react-router-dom"
 
 const { Content } = Layout;
 
@@ -30,7 +31,7 @@ const Home = () => {
     }
   }
 
-  const {filters, updateFilters} = useFilters()
+  //const {filters, updateFilters} = useFilters()
   
   const {resources} = useResources()
 
@@ -39,23 +40,29 @@ const Home = () => {
 
   const [loading, setLoading] = useState(true)
 
-  const [currentPage, setCurrentPage] = useState({currentPage: 1, tick: 0})
+  //const [currentPage, setCurrentPage] = useState({currentPage: 1, tick: 0})
   const limit = 10
 
-  const handleRechercher = useCallback((page) => {
+  const [searchQueryParams, setSearchQueryParams] = useSearchParams()
+
+  const handleRechercher = useCallback(() => {
+      const page = searchQueryParams.get("page") ? searchQueryParams.get("page") : 1
       const offset = (page - 1) * limit
+      let params  = {}
+      params =  searchQueryParams.get("motsCles") ? { ...params, mot_cle: searchQueryParams.get("motsCles")} : params
+      params =  searchQueryParams.get("idSecteur") ? { ...params, secteur_activite_id: searchQueryParams.get("idSecteur")} : params
+      params =  searchQueryParams.get("idFonction") ? { ...params, fonction_id: searchQueryParams.get("idFonction")} : params
+      params = searchQueryParams.get("idVilleSelectionne") ? { ...params, ville_id: searchQueryParams.get("idVilleSelectionne")} : params
+      params = searchQueryParams.get("minAnneeExpMin") ?{ ...params, annees_experience_min: searchQueryParams.get("minAnneeExpMin")} : params
+      params = searchQueryParams.get("typesOffre") ? { ...params, types_offre: searchQueryParams.getAll("typesOffre")} : params
+      console.log(params)
       instance.get("offres/search", {
         params:
         {
-          mot_cle: filters.motsCles,
-          secteur_activite_id: filters.idSecteur,
-          fonction_id: filters.idFonction,
-          ville_id: filters.idVilleSelectionne,
-          annees_experience_min: filters.minAnneeExpMin, 
-          types_offre: filters.typesOffre,
+          ...params,
           limit: limit,
           offset: offset
-      },
+        },
       paramsSerializer: {
         indexes: null
       }
@@ -69,29 +76,40 @@ const Home = () => {
       })
       .finally(() => setLoading(false))
     },
-    [filters, limit]
+    [searchQueryParams, limit]
   )
 
   const [isFirstRender, setIsFirstRender] = useState(true)
 
-    useEffect(() => {
-      if (isFirstRender) {
+    /* useEffect(() => {  
+      if(isFirstRender){
         return
       }
       handleRechercher(currentPage.currentPage)
-    }, [currentPage])
+    }, [currentPage]) */
     
     useEffect(() => {
+      console.log(searchQueryParams)
+      if (isFirstRender) {
+        setIsFirstRender(false)
+      }else{
+        scroll()
+      }
+      setLoading(true)
+      handleRechercher()
+    }, [searchQueryParams])
+
+   /*  useEffect(() => {
       if (isFirstRender) {
         setIsFirstRender(false)
       } else{
         scroll()
       }
+      setSearchQueryParams(filters)
       setLoading(true)
-      setCurrentPage(prev => ({currentPage: 1, tick: prev.tick + 1}))
       // filtres tbaaadl => useefect3la filters bach searchparams tbadl 3la 7saab lfiters li wla=> useeffect 3la searchparams li ghaywli houwa ki lancer requette 3la 7sab saechparms li wla ola li houwa feeh dès le depart ( 3an taree9 setCurrrentpage b7al dima, i9der ikon chi handle recherhce jdid ki yakhod parmaetres fel argument)
       // tbadlaat lcurrent page => 3ayet 3la handler echerche 3adi bel lprametres li kaynin f search prams actuelle o lcurrent page li kayen
-    }, [filters])
+    }, [filters]) */
 
   const scroll = useCallback(
     () => {
@@ -142,7 +160,7 @@ const Home = () => {
               </div>
             </div>
      <Hero/>
-      <SearchBar onChangeLoading ={setLoading} villes={resources.villes} updatePersoHook={updateFilters} setCurrentPage={setCurrentPage} scroll= {scroll} handleEntrerClick={handleEntrerClick} />
+      <SearchBar onChangeLoading ={setLoading} villes={resources.villes} setSearchQueryParams={setSearchQueryParams} scroll= {scroll} handleEntrerClick={handleEntrerClick} searchQueryParams={searchQueryParams}/>
       <div style={{ padding: "0 48px" }} >
         <Layout style={{ padding: "24px 0", background: "#fff", gap: "2rem" }}>
           <Content style={{ padding: "0 24px", minHeight: 280, background: "#fff" }}>
@@ -151,9 +169,9 @@ const Home = () => {
                 {loading ? Array.from({ length: 10 }).map((_, index) => (<Card key={`skeleton-${index}`} loading={true} style={{ minWidth: 300, width: "100%" }} />)) : <JobsSearch offres={offres} loading={loading}/> }
             </Flex>
           </Content>
-          <Filter secteurs={resources.secteurs_activite} fonctions={resources.fonctions} idSecteur={filters.idSecteur} idFonction={filters.idFonction} typesOffre={filters.typesOffre} updatePersoHook={updateFilters} minAnneeExpMin={filters.minAnneeExpMin}/>
+          <Filter secteurs={resources.secteurs_activite} fonctions={resources.fonctions} searchQueryParams={searchQueryParams} setSearchQueryParams={setSearchQueryParams}/>
         </Layout>
-        <Pagination onChangeCurrentPage={setCurrentPage} onChangeLoading={setLoading} scroll={scroll} total={total} limit={limit} currentPage={currentPage.currentPage} />
+        <Pagination  onChangeLoading={setLoading} scroll={scroll} total={total} limit={limit} searchQueryParams={searchQueryParams} setSearchQueryParams={setSearchQueryParams} />
       </div>
       <Footer/>
     </Layout>

@@ -1,6 +1,7 @@
 import {  Button, Form, Input,message, Typography } from 'antd';
 import { useState, useEffect, useReducer } from 'react';
 import { deconnexion, updateProfil } from '../api/api';
+import {LockOutlined, MailOutlined, UserOutlined, QuestionCircleOutlined} from"@ant-design/icons"
 
 const UpdatePassword = () => {
 
@@ -59,8 +60,8 @@ const UpdatePassword = () => {
     
         const [motDePasseIdentique, setmotDePasseIdentique] = useState(true)
     
-        const requiredRulesOnPassword = [{rule: "Au mois une lettre miniscule",  key:1}, {rule: "Au mois une lettre majuscule",  key:2}, {rule: 'Au moins un chiffre', key:3}, {rule: 'Au moins un caractère spéciale', key:4}]
-    
+        const requiredRulesOnPassword = [{rule: <span><QuestionCircleOutlined/> Au mois une lettre miniscule</span>,  key:1}, {rule: <span><QuestionCircleOutlined/> Au mois une lettre majuscule</span>,  key:2}, {rule: <span><QuestionCircleOutlined/> Au moins un chiffre</span>, key:3}, {rule: <span><QuestionCircleOutlined/> Au moins un caractère spéciale</span>, key:4}]    
+
         const onChangeMotDePasse = (value) => {
             const motDePasseEntree = value.target.value
             setMotDePasse(motDePasseEntree)
@@ -72,10 +73,10 @@ const UpdatePassword = () => {
     
         useEffect(() => {
           if(showRules) {
-            document.getElementById(1).style = rules.rule1 ?  "color:green; opacity:0.5" : "color:red; opacity:0.5"
-            document.getElementById(2).style = rules.rule2 ?  "color:green;opacity:0.5" : "color:red;opacity:0.5"
-            document.getElementById(3).style = rules.rule3 ?  "color:green;opacity:0.5" : "color:red;opacity:0.5"
-            document.getElementById(4).style = rules.rule4 ?  "color:green;opacity:0.5" : "color:red;opacity:0.5"
+            document.getElementById(1).style = rules.rule1 ?  "color:green; opacity:0.5" : "color:red"
+            document.getElementById(2).style = rules.rule2 ?  "color:green;opacity:0.5" : "color:red"
+            document.getElementById(3).style = rules.rule3 ?  "color:green;opacity:0.5" : "color:red"
+            document.getElementById(4).style = rules.rule4 ?  "color:green;opacity:0.5" : "color:red"
             rules.rule1 === rules.rule2 === rules.rule3 === rules.rule4 === true ? setValidPassword(true) : setValidPassword(false)
           }
         }, [rules, showRules])
@@ -116,13 +117,15 @@ const UpdatePassword = () => {
                 console.log(informations)
                 success("Modifications apportées!")
                 localStorage.removeItem("token")
-                console.log("redrection manuelle")
+                setTimeout(() => {
+                  windows.location.href = "/login"
+                }, 1500);
             }
             else {
                  if(updateResult && updateResult.status === 401 ) {
                         displayError("Votre session a expiré. Veuillez vous reconnecter..");
                     }else {
-                        displayError("Nous rencontrez des problèmes, veuillez ressayer plus tard !")
+                        displayError("Nous rencontrons des problèmes, veuillez ressayer plus tard !")
                     }
             }
           } catch (error) {
@@ -136,8 +139,8 @@ const UpdatePassword = () => {
 
 
     return <div style={{padding:"1rem"}}>
-        <Typography><h1 style={{fontWeight:"bold", fontSize:"30px"}}>Créer une offre d'emploi</h1>
-        <p style={{color:"gray",marginBottom:"3rem"}}>Remplissez les informations pour publier votre offre</p> </Typography> <div style={{
+        <Typography><h1 style={{fontWeight:"bold", fontSize:"30px"}}>Mot de passe</h1>
+        <p style={{color:"gray",marginBottom:"3rem"}}>Modification des données sensibles</p> </Typography> <div style={{
               fontFamily: "'Inter', 'Segoe UI', sans-serif",
               display: "flex",
               alignItems: "center",
@@ -181,8 +184,14 @@ const UpdatePassword = () => {
         <Input size="large" onFocus={onFocusPassword} onChange={onChangeMotDePasse}/>
       </Form.Item>
 
-<div style={{marginBottom:"24px"}}>
-    {showRules && requiredRulesOnPassword.map(rule => <div id={rule.key} style={{color: "red", opacity:"0.5"}} >{rule.rule}</div> )}
+<div style={{
+    marginBottom: "24px",
+    transition: "all 0.5s ease-in-out",
+    opacity: showRules ? 1 : 0,
+    maxHeight: showRules ? "200px" : "0", 
+    overflow: "hidden"
+}}>
+    {showRules && requiredRulesOnPassword.map(rule => <div id={rule.key} style={{color: "red"}} >{rule.rule}</div> )}
 </div>
       <Form.Item
         label="Confirmation du mot de passe"

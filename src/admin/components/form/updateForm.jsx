@@ -53,14 +53,23 @@ const UpdateForm = ({user}) => {
         if (updateResult.result) {
             console.log(informations)
             success("Modifications apportées!")
-            localStorage.removeItem("token")
-            console.log("redrection manuelle")
+            if("email" in informations) {
+              localStorage.removeItem("token")
+              setTimeout(() => {
+                window.location.href ="/login"
+              }, 1500);
+            }
+            else {
+              setTimeout(() => {
+                window.location.href = "/dashboard"
+              }, 1500); 
+            }
         }
         else {
              if(updateResult && updateResult.status === 401 ) {
                     displayError("Votre session a expiré. Veuillez vous reconnecter..");
                 }else {
-                    displayError("Nous rencontrez des problèmes, veuillez ressayer plus tard !")
+                    displayError("Nous rencontrons des problèmes, veuillez ressayer plus tard !")
                 }
         }
       } catch (error) {

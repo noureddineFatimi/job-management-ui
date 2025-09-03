@@ -1,6 +1,7 @@
 import { Alert, Button, Form, Input,message } from 'antd';
 import { useState, useEffect, useReducer } from 'react';
 import { loginAPI, signUpAPI } from '../../api/api';
+import {LockOutlined, MailOutlined, UserOutlined, QuestionCircleOutlined} from"@ant-design/icons"
 
 const FormToRegister = () => {
 
@@ -101,7 +102,7 @@ const FormToRegister = () => {
 
     const [motDePasseIdentique, setmotDePasseIdentique] = useState(true)
 
-    const requiredRulesOnPassword = [{rule: "Au mois une lettre miniscule",  key:1}, {rule: "Au mois une lettre majuscule",  key:2}, {rule: 'Au moins un chiffre', key:3}, {rule: 'Au moins un caractère spéciale', key:4}]
+    const requiredRulesOnPassword = [{rule: <span><QuestionCircleOutlined/> Au mois une lettre miniscule</span>,  key:1}, {rule: <span><QuestionCircleOutlined/> Au mois une lettre majuscule</span>,  key:2}, {rule: <span><QuestionCircleOutlined/> Au moins un chiffre</span>, key:3}, {rule: <span><QuestionCircleOutlined/> Au moins un caractère spéciale</span>, key:4}]
 
     const onChangeMotDePasse = (value) => {
         const motDePasseEntree = value.target.value
@@ -114,10 +115,10 @@ const FormToRegister = () => {
 
     useEffect(() => {
       if(showRules) {
-        document.getElementById(1).style = rules.rule1 ?  "color:green; opacity:0.5" : "color:red; opacity:0.5"
-        document.getElementById(2).style = rules.rule2 ?  "color:green;opacity:0.5" : "color:red;opacity:0.5"
-        document.getElementById(3).style = rules.rule3 ?  "color:green;opacity:0.5" : "color:red;opacity:0.5"
-        document.getElementById(4).style = rules.rule4 ?  "color:green;opacity:0.5" : "color:red;opacity:0.5"
+        document.getElementById(1).style = rules.rule1 ?  "color:green; opacity:0.5" : "color:red"
+        document.getElementById(2).style = rules.rule2 ?  "color:green;opacity:0.5" : "color:red"
+        document.getElementById(3).style = rules.rule3 ?  "color:green;opacity:0.5" : "color:red"
+        document.getElementById(4).style = rules.rule4 ?  "color:green;opacity:0.5" : "color:red"
         rules.rule1 === rules.rule2 === rules.rule3 === rules.rule4 === true ? setValidPassword(true) : setValidPassword(false)
       }
     }, [rules, showRules])
@@ -145,7 +146,7 @@ const FormToRegister = () => {
         }
         ]} validateDebounce={1000} hasFeedback
        >
-        <Input size="large" />
+        <Input size="large"  prefix={<span style={{marginRight:"0.5rem"}}>{<UserOutlined/>}</span>} placeholder='Entrez votre nom'/>
       </Form.Item>
       
       <Form.Item
@@ -154,7 +155,7 @@ const FormToRegister = () => {
         name="first_name"
         rules={[{ required: true }, {pattern:/^[a-zA-Z\-\s]{3,15}$/, message:"Prénom inconvenable"}]}  validateDebounce={1000} hasFeedback
       >
-        <Input size="large" />
+        <Input size="large" prefix= {<span style={{marginRight:"0.5rem"}}>{<UserOutlined/>}</span>} placeholder='Entrez votre prénom'/>
       </Form.Item>
 
       <Form.Item
@@ -163,7 +164,7 @@ const FormToRegister = () => {
         name="email"
         rules={[{ required: true , type:"email"}]}  validateDebounce={1000} hasFeedback
       >
-        <Input size="large"  />
+        <Input size="large"  prefix= {<span style={{marginRight:"0.5rem"}}>{<MailOutlined/>}</span>} placeholder='Entrez votre email'/>
       </Form.Item>
       
       <Form.Item
@@ -172,11 +173,16 @@ const FormToRegister = () => {
         name="password"
         rules={[{ required: true}, {min:8, max:25, message:"Mot de passe doit être entre 8 et 25 caractères" }]} validateDebounce={1000} hasFeedback
       >
-        <Input size="large" onFocus={onFocusPassword} onChange={onChangeMotDePasse}/>
+        <Input.Password size="large" onFocus={onFocusPassword} onChange={onChangeMotDePasse} prefix={<span style={{marginRight:"0.5rem"}}>{<LockOutlined/>}</span>} placeholder='Entrez le mot de passe'/>
       </Form.Item>
-
-<div style={{marginBottom:"24px"}}>
-    {showRules && requiredRulesOnPassword.map(rule => <div id={rule.key} style={{color: "red", opacity:"0.5"}} >{rule.rule}</div> )}
+<div style={{
+    marginBottom: "24px",
+    transition: "all 0.5s ease-in-out",
+    opacity: showRules ? 1 : 0,
+    maxHeight: showRules ? "200px" : "0", 
+    overflow: "hidden"
+}}>
+    {showRules && requiredRulesOnPassword.map(rule => <div id={rule.key} style={{color: "red"}} >{rule.rule}</div> )}
 </div>
       <Form.Item
         label="Confirmation du mot de passe"
@@ -184,7 +190,7 @@ const FormToRegister = () => {
         name="confirmed_password"
         rules={[{ required: true}]}
       >
-        <Input size="large" onChange={onChangeConfirmedMotDePasse}/>
+        <Input.Password size="large" onChange={onChangeConfirmedMotDePasse}  prefix={<span style={{marginRight:"0.5rem"}}>{<LockOutlined/>}</span>} placeholder='Confirmez le mot de passe'/>
       </Form.Item>
 
       {!motDePasseIdentique && <div style={{padding:"0.5rem", color:"red", fontWeight:"500"}}>les mots de passes sont pas identiques!</div>}
@@ -194,9 +200,9 @@ const FormToRegister = () => {
           type="primary" 
           htmlType="submit" 
           size="large"
-          style={{ width: "100%" }}
+          style={{ width: "100%", marginTop:"20px" }}
         >
-          Creer compte et se connecter
+          Creer un compte
         </Button>
       </Form.Item>
     </Form>

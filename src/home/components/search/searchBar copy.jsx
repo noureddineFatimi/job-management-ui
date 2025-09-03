@@ -2,7 +2,7 @@ import {  Select, Input, Space } from "antd"
 import {EnvironmentOutlined, SearchOutlined } from "@ant-design/icons"
 import { useState, useEffect, memo} from "react"
 
-const SearchBar = memo(function SearchBar({onChangeLoading ,villes , updatePersoHook, setCurrentPage, scroll, handleEntrerClick}) {
+const SearchBar = memo(function SearchBar({onChangeLoading ,villes , setSearchQueryParams, searchQueryParams, scroll, handleEntrerClick}) {
 
       const [isSearchSticky, setIsSearchSticky] = useState(false)
 
@@ -39,14 +39,17 @@ const SearchBar = memo(function SearchBar({onChangeLoading ,villes , updatePerso
           }}
         >
           <Space.Compact style={{ width: "50%" }} size="large">
-            <Input addonBefore={<SearchOutlined />} placeholder="Mots clés (ex. Développeur)" onChange={(value) => {{
+            <Input addonBefore={<SearchOutlined />} placeholder="Mots clés (ex. Développeur)" value={searchQueryParams.get("motsCles")} onChange={(value) => {{
         const motsClesTraite = value.target.value.trim()
+        const params = new URLSearchParams(searchQueryParams)
         if (motsClesTraite.length === 0){
-          updatePersoHook("motsCles",null)
+          params.delete("motsCles")
         }
         else{
-          updatePersoHook("motsCles", motsClesTraite)
+          params.set("motsCles", motsClesTraite)
         }
+        params.set("page", 1)
+        setSearchQueryParams(params)
       } } }  onKeyDown={handleEntrerClick}/>
           </Space.Compact>
           <Select
@@ -54,12 +57,22 @@ const SearchBar = memo(function SearchBar({onChangeLoading ,villes , updatePerso
             showSearch
             optionFilterProp="label"
             suffixIcon={<EnvironmentOutlined/>}
-            defaultValue= {null}
+            value={searchQueryParams.get("idVilleSelectionne") ? parseInt(searchQueryParams.get("idVilleSelectionne")) : ""}
+            defaultValue= ""
             style={{ width: "20%" }}
-            onChange={value => updatePersoHook("idVilleSelectionne",value)}
+            onChange={value =>  {
+              const params = new URLSearchParams(searchQueryParams)
+              if (value) {
+                params.set("idVilleSelectionne", value); 
+              } else {
+                params.delete("idVilleSelectionne");    
+              }
+              params.set("page", 1)
+              setSearchQueryParams(params);
+          }}
             options={[
               { 
-              value: null, 
+              value: "", 
               label: "Tous les villes" 
               },
               ...villes.map(ville => (

@@ -131,7 +131,7 @@ const [current, setCurrent] = useState(0);
                     }
                     else {
                       
-            error("Nous rencontrez des problèmes lors du chargement des données du l'offre, veuillez ressayer plus tard !")
+            error("Nous rencontrons des problèmes lors du chargement des données du l'offre, veuillez ressayer plus tard !")
                     }
     }
     } catch (err) {
@@ -155,7 +155,7 @@ const [current, setCurrent] = useState(0);
                         setNotFound(true)
                         return {res: false, data:null}
                       }else {
-                         error("Nous rencontrez des problèmes lors du chargement des données du l'offre, veuillez ressayer plus tard !")
+                         error("Nous rencontrons des problèmes lors du chargement des données du l'offre, veuillez ressayer plus tard !")
             return {res: false, data:null}
                       }
                     }
@@ -180,7 +180,7 @@ const [current, setCurrent] = useState(0);
                     error("Votre session a expiré. Veuillez vous reconnecter..");
                     }
                     else {
-            error("Nous rencontrez des problèmes lors du chargement des données du l'offre, veuillez ressayer plus tard !")
+            error("Nous rencontrons des problèmes lors du chargement des données du l'offre, veuillez ressayer plus tard !")
                     }
     }
     } catch (err) {
@@ -198,7 +198,7 @@ const [current, setCurrent] = useState(0);
                     error("Votre session a expiré. Veuillez vous reconnecter..");
                     }
                     else {
-            error("Nous rencontrez des problèmes lors du chargement des données du l'offre, veuillez ressayer plus tard !")
+            error("Nous rencontrons des problèmes lors du chargement des données du l'offre, veuillez ressayer plus tard !")
                     }
                 }
     } catch (err) {
@@ -229,7 +229,7 @@ const [current, setCurrent] = useState(0);
             error("Votre session a expiré. Veuillez vous reconnecter..");
         }
         else {
-        error("Nous rencontrez des problèmes, veuillez ressayer plus tard !")
+        error("Nous rencontrons des problèmes, veuillez ressayer plus tard !")
         }
         }else{
           success("Votre offre est bien modifié!")
@@ -623,11 +623,9 @@ Compétences requises        </p>
     return <div style={{height:"100%", display:"flex",justifyContent:"center",alignItems:"center"}}> <Empty description="404 - Page introuvable"/></div>
    }
 
-  
-
     return <div style={{padding:"1rem"}}>
-    <Typography><h1 style={{fontWeight:"bold", fontSize:"30px"}}>Créer une offre d'emploi</h1>
-    <p style={{color:"gray",marginBottom:"3rem"}}>Remplissez les informations pour publier votre offre</p> </Typography>
+    <Typography><h1 style={{fontWeight:"bold", fontSize:"30px"}}>Modifier votre offre d'emploi</h1>
+    <p style={{color:"gray",marginBottom:"3rem"}}>Reremplire les champs souhaitables pour effectuer les modifications sur l'offre</p> </Typography>
     {!loadingOffreData ? <><ConfigProvider theme={{
     token: {
       colorPrimary: "#52c41a"

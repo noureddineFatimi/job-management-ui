@@ -1,5 +1,5 @@
 import { Button, Form, Input } from 'antd';
-
+import {LockOutlined, MailOutlined} from"@ant-design/icons"
 
 const FormToLogin = ({onFinish}) => {
     return <Form
@@ -15,7 +15,7 @@ const FormToLogin = ({onFinish}) => {
         name="username"
         rules={[{ required: true, message: 'Veuillez entrez votre email!' }]}
       >
-        <Input size="large" />
+        <Input size="large" prefix= {<span style={{marginRight:"0.5rem"}}>{<MailOutlined/>}</span>} placeholder='Entrez votre email'/>
       </Form.Item>
       
       <Form.Item
@@ -24,7 +24,7 @@ const FormToLogin = ({onFinish}) => {
         name="password"
         rules={[{ required: true, message: 'Veuillez entrez votre mot de passe!' }]}
       >
-        <Input.Password size="large" />
+        <Input.Password size="large" prefix={<span style={{marginRight:"0.5rem"}}>{<LockOutlined/>}</span>} placeholder='Entrez le mot de passe'/>
       </Form.Item>
       
       <Form.Item>

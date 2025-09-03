@@ -26,7 +26,7 @@ const UpdateProfil= () => {
              if(userResponse && userResponse.status === 401 ) {
                error("Votre session a expiré. Veuillez vous reconnecter..");
              }else {
-               error("Nous rencontrez des problèmes, veuillez ressayer plus tard !")
+               error("Nous rencontrons des problèmes, veuillez ressayer plus tard !")
              }
            }
                } catch (err) {
@@ -42,8 +42,8 @@ const UpdateProfil= () => {
     
 
     return <div style={{padding:"1rem"}}> {contextHolder}
-    <Typography><h1 style={{fontWeight:"bold", fontSize:"30px"}}>Créer une offre d'emploi</h1>
-    <p style={{color:"gray",marginBottom:"3rem"}}>Remplissez les informations pour publier votre offre</p> </Typography> <div style={{
+    <Typography><h1 style={{fontWeight:"bold", fontSize:"30px"}}>Modification du profil</h1>
+    <p style={{color:"gray",marginBottom:"3rem"}}>Modifier vos informations personnelles</p> </Typography> <div style={{
           fontFamily: "'Inter', 'Segoe UI', sans-serif",
           display: "flex",
           alignItems: "center",

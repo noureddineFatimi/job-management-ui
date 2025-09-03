@@ -71,23 +71,18 @@ const error = (content) => {
       error("Ajouter votre cv !")
     return false;
   }
-
   const formData = new FormData();
   formData.append("file", fileList[0].originFileObj);
   try {
     const response = await instance.post("candidats/cv", formData)
     return response.data.id_fichier
   } catch (err) {
-    error("Nous rencontrez des problèmes, veuillez ressayer plus tard !")
+    error("Nous rencontrons des problèmes, veuillez ressayer plus tard !")
     console.error(err)
     return false
   }
   }
 
-  const layout = {
-    labelCol :{ span: 6 },
-  wrapperCol: { span: 16 },
-};
 const validateMessages = {
   required: '${label} est obligatoire!',
   types: {
@@ -96,14 +91,14 @@ const validateMessages = {
 };
 
 const onFinish = async (values) => {
-  setLoadingMessageState(true)
-  const id_fichier = await ajouterCV()
-  if (!id_fichier) {
+  try {
+    setLoadingMessageState(true)
+    const id_fichier = await ajouterCV()
+    if (!id_fichier) {
       console.error("Erreur : CV non uploadé !");
       return;
     }  
-  const data = {...values, cv_id: id_fichier}
-  try {
+    const data = {...values, cv_id: id_fichier}
     const response = await instance.post(`offres/${idOffre}/postuler`, data);
     success("Votre candidature est prise en compte !")
     console.log(response.data);
@@ -112,11 +107,13 @@ const onFinish = async (values) => {
       error(err.response.data.detail)
     }
     else {
-      error("Nous rencontrez des problèmes, veuillez ressayer plus tard !")
+      error("Nous rencontrons des problèmes, veuillez ressayer plus tard !")
     }
     console.error(err)
   }
-  setLoadingMessageState(false)
+  finally{
+    setLoadingMessageState(false)
+  }
 }
 
       const deadline = (deadline_postulation) => {
@@ -129,30 +126,30 @@ const onFinish = async (values) => {
     return false
   }
 
-    return <> {contextHolder}{loadingContextHolder}{!loading && <div  style={{display:"flex", flexDirection: "column", }}>
-        <h3 style={{ marginLeft:"auto", marginRight: "auto", fontSize: "30px", color: "#7253ce "}}>Postulez maintenant!</h3>
+    return <> {contextHolder}{loadingContextHolder}{!loading && <div>
+        <div style={{ display:"flex",justifyContent:"center", fontSize: "30px", color: "#7253ce "}}><h3>Postulez maintenant!</h3></div>
 <div style={{display:"flex", justifyContent: "center"}}>
 
      {deadline(deadline_postulation) ? <Form
-    {...layout}
+    layout='vertical'
     name="candidature-form"
     onFinish={onFinish}
     style={{ width: "50%" }}
     validateMessages={validateMessages}
   >
-    <Form.Item name='nom' label="Nom" validateDebounce={1000} hasFeedback rules={[{ required: true} , {pattern:/^[a-zA-Z\-\s]{3,10}$/, message: "Nom inconvable"}]}>
+    <Form.Item name='nom' label={<span style={{fontWeight:"500"}}>Nom</span>} validateDebounce={1000} hasFeedback rules={[{ required: true} , {pattern:/^[a-zA-Z\-\s]{3,10}$/, message: "Nom inconvable"}]}>
       <Input />
     </Form.Item>
-    <Form.Item name='prenom' label="Prénom"  hasFeedback validateDebounce={1000}  rules={[{ required: true} , {pattern:/^[a-zA-Z\-\s]{3,10}$/, message: "Prénom incovenable"}]}>
+    <Form.Item name='prenom' label={<span style={{fontWeight:"500"}}>Prénom</span>}  hasFeedback validateDebounce={1000}  rules={[{ required: true} , {pattern:/^[a-zA-Z\-\s]{3,10}$/, message: "Prénom incovenable"}]}>
       <Input />
     </Form.Item>
-    <Form.Item name='email' label="Email" hasFeedback validateDebounce={1000}  rules={[{ type: 'email', required:true }]}>
+    <Form.Item name='email' label={<span style={{fontWeight:"500"}}>Email</span>} hasFeedback validateDebounce={1000}  rules={[{ type: 'email', required:true }]}>
       <Input />
     </Form.Item>
-    <Form.Item name="numero_tel" label="Numero de télephone" validateDebounce={1000}  hasFeedback rules={[{ required: true}, {pattern:/^(05|06|07)\d{8}$/ , message:"Numero de télephone incovenable"}]}>
+    <Form.Item name="numero_tel" label={<span style={{fontWeight:"500"}}>Numero de télephone</span>} validateDebounce={1000}  hasFeedback rules={[{ required: true}, {pattern:/^(05|06|07)\d{8}$/ , message:"Numero de télephone incovenable"}]}>
         <Input addonBefore="+212" />
     </Form.Item>
-   <Form.Item label="CV" required = "true">
+   <Form.Item label={<span style={{fontWeight:"500"}}>CV</span>} required = "true">
         <Upload.Dragger name="cv"  maxCount={1} multiple={false} fileList={fileList} beforeUpload={beforeUpload} onChange={handleChange} onRemove={handleRemove} accept=".pdf,.docx" >
           <p className="ant-upload-drag-icon">
             <InboxOutlined />
@@ -162,12 +159,12 @@ const onFinish = async (values) => {
         </Upload.Dragger>
     </Form.Item>
     <Form.Item label={null}>
-      <Button type="primary" htmlType="submit">
-        Submit
+      <Button type="primary" htmlType="submit" style={{width:"100%"}}>
+        Postuler
       </Button>
     </Form.Item>
   </Form>:  <div style={{ color: "red", fontWeight: "bold" }}>
-          La date limite de postulation est dépassée.
+          La date limite de postulation est dépassée!
         </div>}
 
       

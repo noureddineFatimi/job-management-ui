@@ -8,30 +8,38 @@ import UpdateProfil from "./admin/pages/updateProfil"
 import UpdatePassword from "./admin/pages/updatePassword"
 import UpdateJobOffre from "./admin/pages/updateOffre"
 import { Empty } from "antd"
-import AddJobOffre from "./admin/pages/addJobOffre"
-import Home from "./home/page/home"
+import Home from "./home/page/home copy"
 import Job from "./job/pages/job"
 import NotFound from "./notFound"
+import UpdateJobOffreCoppy from "./admin/pages/updateOffre_copy"
+import { lazy } from "react"
+import ShowCandidatures from "./admin/pages/showCandidatures"
+import CodeSource from "./admin/pages/codeSource"
+import DeleteAccount from "./admin/pages/deleteAccount"
+const AddJobOffre = lazy(() => import("./admin/pages/addJobOffre"));
 
 function App() {
   return (
     <Routes>
-      <Route index element={<Home />} />
-      <Route path="offres/:id_offre" element={<Job/>} />
+      <Route index element={<Home/>} />
+      <Route path="/offres/:id_offre" element={<Job/>} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} >
-        <Route index element={<Navigate to="offres" />} />
+        <Route index element={<Navigate to="offres" replace/>} />
         <Route path="offres" element={<MyOffres />} />
         <Route path="offres/add" element={<AddJobOffre />} />
-        <Route path="offres/edit/:id_offre" element={<UpdateJobOffre />} />
+        <Route path="offres/edit/:id_offre" element={<UpdateJobOffreCoppy />} />
+        <Route path="offres/:id_offre/applications" element={<ShowCandidatures/>} />
         <Route path="profil" element={<Profil />} />
         <Route path="profil/edit" element={<UpdateProfil />} />
         <Route path="profil/edit/password" element={<UpdatePassword />} />
+        <Route path="profil/delete-account" element={<DeleteAccount />} />
+        <Route path="code-source" element={<CodeSource/>} />
         <Route path="*" element={<div style={{height:"100%", display:"flex",justifyContent:"center",alignItems:"center"}}> <Empty description="404 - Page introuvable"/></div>} />
       </Route>
       <Route path="/Not-found" element={<NotFound/>}/>
-      <Route path="*" element={<Navigate to="/Not-found" />}/>
+      <Route path="*" element={<Navigate to="/Not-found" replace/>}/>
     </Routes>
   )
 }

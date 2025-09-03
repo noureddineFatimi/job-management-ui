@@ -1,15 +1,40 @@
-import { DatePicker, Input, Select,Upload, Button, InputNumber, Card, message, Steps, Divider, Typography, ConfigProvider } from "antd"
+import { DatePicker, Input, Select,Upload, Button, InputNumber, Card, message, Steps, Divider, Typography, ConfigProvider, Image } from "antd"
 import Form from "antd/es/form/Form"
 import FormItem from "antd/es/form/FormItem"
 import { useState, useEffect } from "react"
 import { ressourcesAPI, postOffre, uploadLogoToServer } from "../api/api"
-import { CloseOutlined, UploadOutlined } from '@ant-design/icons';
+import { CloseOutlined, UploadOutlined, PlusOutlined } from '@ant-design/icons';
 import { BriefcaseIcon,  BuildingOfficeIcon, LightBulbIcon} from "@heroicons/react/24/outline";
 
 const AddJobOffre = () => {
+
+  const getBase64 = file =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+
+  const handlePreview = async file => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+  };
+
+   const uploadButton = (
+    <button style={{ border: 0, background: 'none' }} type="button">
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Ajouter Image</div>
+    </button>
+  );
+
 const [current, setCurrent] = useState(0);
-
-
 
   const [messageApi, contextHolder] = message.useMessage();
   const [loadingMessage, loadingContextHolder] = message.useMessage()
@@ -85,7 +110,7 @@ const [current, setCurrent] = useState(0);
             error("Votre session a expiré. Veuillez vous reconnecter..");
         }
         else {
-        error("Nous rencontrez des problèmes, veuillez ressayer plus tard !")
+        error("Nous rencontrons des problèmes, veuillez ressayer plus tard !")
         }
       }
       return uploadResult.logo_id
@@ -130,7 +155,7 @@ const [current, setCurrent] = useState(0);
             error("Votre session a expiré. Veuillez vous reconnecter..");
         }
         else {
-        error("Nous rencontrez des problèmes, veuillez ressayer plus tard !")
+        error("Nous rencontrons des problèmes, veuillez ressayer plus tard !")
         }
         }else{
           success("Votre offre est bien ajouté!")
@@ -167,7 +192,7 @@ const nextStep = () => {
           letterSpacing: '0.5px'}}>
         Informations sur l'offre
         </p>
-<FormItem label={< span style={{fontWeight:"600"}}>Titre</span>} name="titre" hasFeedback validateDebounce={1000}  rules={[{ required: true} , {pattern:/^[a-zA-Z0-9_'/\"\s]{2,35}$/, message: "Titre incovenable"}]}>
+<FormItem label={< span style={{fontWeight:"600"}}>Titre</span>} name="titre" hasFeedback validateDebounce={1000}  rules={[{ required: true, message:"Le titre est obligatoire"} , {pattern:/^[a-zA-Z0-9_'/\"\s]{2,35}$/, message: "Titre incovenable"}]}>
             <Input placeholder="ex. Développeur Junior H/F" />
         </FormItem>
 
@@ -296,6 +321,10 @@ const nextStep = () => {
                    {
                     value:"Stage",
                     label:"Stage"
+                  },
+                   {
+                    value:"Freelance",
+                    label:"Freelance"
                   }
                 ]}
               />
@@ -371,7 +400,7 @@ const nextStep = () => {
         <Input.TextArea maxLength={100} placeholder="description sur l'offre.."/>
       </FormItem>
 
-                <FormItem label={< span style={{fontWeight:"600"}}>Date limit de Postulation</span>} name="deadline_postulation" rules={[{required: true}]} >
+                <FormItem label={< span style={{fontWeight:"600"}}>Date limite de Postulation</span>} name="deadline_postulation" rules={[{required: true, message:"La date limite de postulation est obligatoire"}]} >
                   <DatePicker style={{width:"50%"}}/>
                 </FormItem>
       </div>)
@@ -390,7 +419,7 @@ const nextStep = () => {
           letterSpacing: '0.5px'}}>
       Informations sur l'entreprise
         </p>
-           <FormItem label={< span style={{fontWeight:"600"}}>Nom du l'entreprise</span>} name="nom_entreprise"  rules={[{ required: true} , {pattern:/^[a-zA-Z0-9_\-'\s]{2,15}$/, message: "Nom incovenable"}]}hasFeedback validateDebounce={1000}  >
+           <FormItem label={< span style={{fontWeight:"600"}}>Nom du l'entreprise</span>} name="nom_entreprise"  rules={[{ required: true, message:"Le nom du l'entreprise est obligatoire"} , {pattern:/^[a-zA-Z0-9_\-'\s]{2,15}$/, message: "Nom incovenable"}]}hasFeedback validateDebounce={1000}  >
             <Input placeholder="ex. Capgemini"/>
         </FormItem>
 
@@ -413,12 +442,33 @@ const nextStep = () => {
         <Input.TextArea maxLength={50} placeholder="adresse du l'entreprise.."/>
       </FormItem>
 
+
+
+
+             
+
+
+
+
+
+
          <Form.Item label={< span style={{fontWeight:"600"}}>Logo du l'entreprise</span>}>
-                        <Upload name="logo" maxCount={1} multiple={false} beforeUpload={beforeUpload} fileList={fileList} listType="picture" onChange={handleChange} onRemove={handleRemove} accept=".jpeg,.png">
-                          <Button type="primary" icon={<UploadOutlined />}>
-                                Ajouter une image
-                                </Button>
+                        <Upload name="logo" maxCount={1} multiple={false} beforeUpload={beforeUpload} fileList={fileList} listType="picture-card" onChange={handleChange} onRemove={handleRemove} accept=".jpeg,.png" onPreview={handlePreview}>
+                          {uploadButton}
                         </Upload>
+ {previewImage && (
+        <Image
+          wrapperStyle={{ display: 'none' }}
+          preview={{
+            visible: previewOpen,
+            onVisibleChange: visible => setPreviewOpen(visible),
+            afterOpenChange: visible => !visible && setPreviewImage(''),
+          }}
+          src={previewImage}
+        />
+      )}
+                        
+
                     </Form.Item>
         </div>
       )
@@ -452,7 +502,7 @@ Compétences requises        </p>
                 }
               >
 
-                <FormItem  name={[field.name, 'nom_competence']}  rules={[{ required: true} , {pattern:/^[a-zA-Z\s]{5,15}$/, message: "Nom incovenable"}]} hasFeedback validateDebounce={1000} >
+                <FormItem  name={[field.name, 'nom_competence']}  rules={[{ required: true,message:"Le nom du competence à inserer est obligatoire"} , {pattern:/^[a-zA-Z\s]{5,15}$/, message: "Nom incovenable"}]} hasFeedback validateDebounce={1000} >
                   <Input placeholder="ex. Java"/>
                 </FormItem>
                 <FormItem  name={[field.name, 'niveau']} required initialValue={null}>
@@ -499,7 +549,7 @@ Compétences requises        </p>
     setCurrent(value);
   };
     return <div style={{padding:"1rem"}}>
-    <Typography><h1 style={{fontWeight:"bold", fontSize:"30px"}}>Créer une offre d'emploi</h1>
+    <Typography><h1 style={{fontWeight:"bold", fontSize:"30px"}}>Créer un offre d'emploi</h1>
     <p style={{color:"gray",marginBottom:"3rem"}}>Remplissez les informations pour publier votre offre</p> </Typography>
     <ConfigProvider theme={{
     token: {

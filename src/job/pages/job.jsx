@@ -25,9 +25,8 @@ const Job = () => {
     }
 
     return  <Layout style={{ background: "#fff" }}>       
-
     <Header/>
-    <Content style={{margin:"1.5rem" }}>
+    <Content style={{margin:"1.5rem", }}>
         <JobOffre data={data} loading={loading}/>
         {data.data && <Skills loading={loading} competences={data.data.competences} />}
         {data.data && <Company loading={loading} entreprise = {data.data.entreprise}/>}

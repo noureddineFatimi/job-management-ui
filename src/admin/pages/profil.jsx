@@ -29,7 +29,7 @@ const Profil = () => {
       if(userResponse && userResponse.status === 401 ) {
         error("Votre session a expiré. Veuillez vous reconnecter..");
       }else {
-        error("Nous rencontrez des problèmes, veuillez ressayer plus tard !")
+        error("Nous rencontrons des problèmes, veuillez ressayer plus tard !")
       }
     }
         } catch (err) {
@@ -44,8 +44,8 @@ const Profil = () => {
 
     
     return <div style={{padding:"1rem", fontFamily: "'Inter', 'Segoe UI', sans-serif"}}> {contextHolder}
-    <Typography><h1 style={{fontWeight:"bold", fontSize:"30px"}}>Créer une offre d'emploi</h1>
-    <p style={{color:"gray",marginBottom:"3rem"}}>Remplissez les informations pour publier votre offre</p> </Typography>
+    <Typography><h1 style={{fontWeight:"bold", fontSize:"30px"}}>Vue sur le profil</h1>
+    <p style={{color:"gray",marginBottom:"3rem"}}>Informations personelles sur votre compte</p> </Typography>
     {loading ? <div style={{width:"100%",display
           :"flex", height:"50vh",alignItems:"center" ,  justifyContent:"center" }}> <Spin size="large" /></div> : <Content style={{fontWeight:"500", display:"flex", flexDirection:"column",padding:"1rem", justifyContent:"center",alignItems:"center",borderRadius:"20px", boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",width:"70%",marginLeft:"auto",marginRight:"auto"}}>
     <Avatar size={64} icon={<UserOutlined />} />
