@@ -12,7 +12,7 @@ import Hero from '../components/layout/hero'
 import SearchBar from "../components/search/searchBar"
 import Filter from "../components/search/filter"
 import Pagination from "../components/job/pagination"
-import websitelogo from "../../assets/images/websitelogo.png"
+import websitelogo from "../../assets/images/websiteLogo.png"
 
 const { Content } = Layout;
 

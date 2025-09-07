@@ -12,7 +12,7 @@ import Hero from '../components/layout/hero'
 import SearchBar from "../components/search/searchBar copy"
 import Filter from "../components/search/filter copy"
 import Pagination from "../components/job/pagination copy"
-import websitelogo from "../../assets/images/websitelogo.png"
+import websitelogo from "../../assets/images/websiteLogo.png"
 import { useSearchParams } from "react-router-dom"
 
 const { Content } = Layout;

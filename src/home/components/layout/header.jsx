@@ -1,4 +1,4 @@
-import websitelogo from "../../../assets/images/websitelogo.png"
+import websitelogo from "../../../assets/images/websiteLogo.png"
 import { memo } from "react"
 import "../../assets/home.css"
 import { useNavigate } from "react-router-dom"
