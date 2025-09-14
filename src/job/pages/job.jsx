@@ -8,6 +8,7 @@ import Skills from "../components/job/skills"
 import Company from "../components/job/company"
 import ApplyForm from "../components/forms/applyFom"
 import { Navigate, useParams } from "react-router-dom"
+import Description from "../components/job/description"
 
 const Job = () => {
 
@@ -30,6 +31,7 @@ const Job = () => {
         <JobOffre data={data} loading={loading}/>
         {data.data && <Skills loading={loading} competences={data.data.competences} />}
         {data.data && <Company loading={loading} entreprise = {data.data.entreprise}/>}
+        {data.data && <Description loading={loading} description={data.data.description} />}
         {data.data && <ApplyForm loading={loading} deadline_postulation={data.data.deadline_postulation} idOffre={id_offre}/>}
     </Content>
 

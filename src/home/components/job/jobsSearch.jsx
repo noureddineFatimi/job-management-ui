@@ -44,8 +44,8 @@ const JobsSearch = memo(function JobsSearch({offres, loading}) {
                           <div style={{display:"flex", alignItems:"flex-start", gap:"0.25rem"}}><BriefcaseIcon style={{width:"20px"}}/> <div> Télétravail: {offre.teletravail} </div></div>
                         </span>
                       </div>
-                      {offre.description && <div style={{ color: "#000" , marginBottom:"0.25rem", marginTop:".5rem"}}>
-                        {offre.description}
+                      {offre.resume && <div style={{ color: "#000" , marginBottom:"0.25rem", marginTop:".5rem"}}>
+                        {offre.resume}
                       </div>}
                       {
                         offre.competences !== null && offre.competences !== undefined && offre.competences.length > 0 &&

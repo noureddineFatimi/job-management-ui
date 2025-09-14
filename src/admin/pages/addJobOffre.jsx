@@ -397,7 +397,7 @@ const nextStep = () => {
         </FormItem>
 
       <FormItem label={< span style={{fontWeight:"600"}}>Description</span>} name="description">
-        <Input.TextArea maxLength={100} placeholder="description sur l'offre.."/>
+        <Input.TextArea maxLength={1000} placeholder="description sur l'offre.."/>
       </FormItem>
 
                 <FormItem label={< span style={{fontWeight:"600"}}>Date limite de Postulation</span>} name="deadline_postulation" rules={[{required: true, message:"La date limite de postulation est obligatoire"}]} >

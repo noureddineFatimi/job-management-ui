@@ -90,9 +90,7 @@ const JobOffre = ({data, loading }) => {
 
                         <div><TeamOutlined/> {offre.nbr_candidats} candidatures</div>
                       </div>
-                      {offre.description ? <p style={{ color: "#000", fontWeight:"500" }}>
-                        {offre.description}</p> : <div></div>
-                      }
+                      <div></div>
                       <div style={{ display: "flex",justifyContent: "space-between" , width:"100%", fontWeight:"500"}}>
                         {salaire(offre.salaire_min, offre.salaire_max)}
                         
