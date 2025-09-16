@@ -16,6 +16,8 @@ import { lazy } from "react"
 import ShowCandidatures from "./admin/pages/showCandidatures"
 import CodeSource from "./admin/pages/codeSource"
 import DeleteAccount from "./admin/pages/deleteAccount"
+import Statistics from "./admin/pages/statistics"
+
 const AddJobOffre = lazy(() => import("./admin/pages/addJobOffre"));
 
 function App() {
@@ -26,7 +28,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} >
-        <Route index element={<Navigate to="offres" replace/>} />
+        <Route index element={<Statistics/>} />
         <Route path="offres" element={<MyOffres />} />
         <Route path="offres/add" element={<AddJobOffre />} />
         <Route path="offres/edit/:id_offre" element={<UpdateJobOffreCoppy />} />
@@ -36,7 +38,7 @@ function App() {
         <Route path="profil/edit/password" element={<UpdatePassword />} />
         <Route path="profil/delete-account" element={<DeleteAccount />} />
         <Route path="code-source" element={<CodeSource/>} />
-        <Route path="*" element={<div style={{height:"100%", display:"flex",justifyContent:"center",alignItems:"center"}}> <Empty description="404 - Page introuvable"/></div>} />
+        <Route path="*" element={<div style={{height:"100%", display:"flex", justifyContent:"center", alignItems:"center"}}> <Empty description="404 - Page introuvable"/></div>} />
       </Route>
       <Route path="/Not-found" element={<NotFound/>}/>
       <Route path="*" element={<Navigate to="/Not-found" replace/>}/>

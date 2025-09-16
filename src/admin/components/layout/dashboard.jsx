@@ -1,6 +1,6 @@
 import { useState,useEffect } from 'react';
 import websiteLogo from "../../../assets/images/websiteLogo.png"
-import { BriefcaseIcon, AdjustmentsHorizontalIcon, UserCircleIcon, CodeBracketSquareIcon, EyeIcon , Cog6ToothIcon, TrashIcon, PlusIcon, CodeBracketIcon} from "@heroicons/react/24/outline";
+import { BriefcaseIcon, AdjustmentsHorizontalIcon, UserCircleIcon, CodeBracketSquareIcon, EyeIcon , Cog6ToothIcon, TrashIcon, PlusIcon, CodeBracketIcon, ChartPieIcon} from "@heroicons/react/24/outline";
 import {PieChartOutlined} from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme, Spin, Empty,message, Button } from 'antd';
 import { Suspense, lazy } from "react";
@@ -13,7 +13,6 @@ import UpdatePassword from '../../pages/updatePassword';
 import UpdateJobOffre from '../../pages/updateOffre';
 import { deconnexion, profil } from '../../api/api';
 
-
 const { Header, Content, Sider } = Layout;
 function getItem(label, key, icon, children) {
   return {
@@ -23,7 +22,9 @@ function getItem(label, key, icon, children) {
     label,
   };
 }
+
 const items = [
+  getItem("Tableau de bord","/dashboard",<ChartPieIcon style={{ width: "16px" }}/>),
   getItem("Gestion des offres d'emploi", "sub1", <BriefcaseIcon style={{ width: "16px" }} />, [
     getItem("Mes offres", "/dashboard/offres", <AdjustmentsHorizontalIcon style={{ width: "16px" }} />),
     getItem("Publier un offre", "/dashboard/offres/add", <PlusIcon style={{ width: "16px" }} />),

@@ -183,3 +183,12 @@ export const deleteCompte = async () => {
     return {result: false, status: error.response ? error.response.status : null, logo:null}
   }
 }
+
+export const getStatistics = async() => {
+  try {
+    const response = await instance.get("offres/dashboard")
+    return {result: true, status : response.status, statistics : response.data}
+  } catch (error) {
+    return {result: false, status: error.response ? error.response.status : null, statistics: null}
+  }
+}
