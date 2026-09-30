@@ -16,6 +16,7 @@ Cette application permet la gestion complète des offres de travail avec deux in
 - 📝 Candidature en ligne
 - 👤 Profil utilisateur personnalisable
 - 📱 Interface responsive et moderne
+  ![description](interface.png)
 
 ### Dashboard Administrateur
 - 📊 Vue d'ensemble avec statistiques
@@ -24,6 +25,7 @@ Cette application permet la gestion complète des offres de travail avec deux in
 - 🔧 Administration des utilisateurs
 - 📈 Rapports et analyses
 - 🎛️ Paramètres système
+  ![description](admin.png)
 
 ## 🛠️ Technologies utilisées
 
